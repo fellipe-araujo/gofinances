@@ -12,7 +12,7 @@ import {
 interface Props {
   type: 'positive' | 'negative' | 'total';
   title: string;
-  amount?: string;
+  amount: string;
   lastTransaction: string;
 }
 
