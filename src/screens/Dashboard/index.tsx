@@ -10,6 +10,9 @@ import {
   TransactionCardProps,
 } from '../../components/TransactionCard';
 
+import { monthNames } from '../../utils/months';
+import { useAuth } from '../../hooks/auth';
+
 import {
   Container,
   Header,
@@ -27,7 +30,6 @@ import {
   LogoutButton,
   LoadContainer,
 } from './styles';
-import { monthNames } from '../../utils/months';
 
 export interface DataListProps extends TransactionCardProps {
   id: string;
@@ -52,27 +54,22 @@ export function Dashboard() {
   );
 
   const theme = useTheme();
+  const { signOut, user } = useAuth();
 
-  // function getLastTransactionDate(
-  //   collection: DataListProps[],
-  //   type: 'positive' | 'negative'
-  // ) {
-  //   if (collection.length === 0) {
-  //     return 'Nenhuma transação';
-  //   }
+  function getLastTransactionDate(
+    collection: DataListProps[],
+    type: 'positive' | 'negative'
+  ) {
+    if (collection.length === 0) {
+      return;
+    }
 
-  //   const lastTransaction = collection
-  //     .filter((transaction) => transaction.type === type)
-  //     .reverse()[0];
+    const lastTransaction = collection.filter(
+      (transaction) => transaction.type === type
+    )[0];
 
-  //   if (!lastTransaction) {
-  //     return 'Nenhuma transação'
-  //   }
-
-  //   return `${lastTransaction.date?.toString().slice(0, 2)} de ${monthNames[
-  //     Number(lastTransaction.date?.toString().slice(3, 5)) - 1
-  //   ].slice(0, 3)}`;
-  // }
+    return lastTransaction;
+  }
 
   async function loadTransactions() {
     const dataKey = `@gofinances:transactions_user${user.id}`;
@@ -114,33 +111,22 @@ export function Dashboard() {
 
     setTransactions(transactionsFormatted.reverse());
 
-    // let lastTransactionEntries = getLastTransactionDate(
-    //   transactions,
-    //   'positive'
-    // );
-    // let lastTransactionExpense = getLastTransactionDate(
-    //   transactions,
-    //   'negative'
-    // );
-
-    // if (!lastTransactionEntries) {
-    //   lastTransactionEntries = '000';
-    // }
-
-    // if (!lastTransactionExpense) {
-    //   lastTransactionExpense = '000';
-    // }
-
-    // const lasTransactionPeriod = Math.max.apply(Math, [
-    //   Number(lastTransactionEntries.slice(0, 2)),
-    //   Number(lastTransactionExpense.slice(0, 2)),
-    // ]);
-
-    // const totalInterval = `01 a ${
-    //   lasTransactionPeriod < 10 ? '0' : ''
-    // }${lasTransactionPeriod.toString()}`;
+    let lastTransactionEntries = getLastTransactionDate(
+      transactions,
+      'positive'
+    );
+    let lastTransactionExpenses = getLastTransactionDate(
+      transactions,
+      'negative'
+    );
 
     const total = entriesTotal - expenseTotal;
+
+    const lastTransactionEntriesDateString =
+      lastTransactionEntries?.date.toString();
+
+    const lastTransactionExpensesDateString =
+      lastTransactionExpenses?.date.toString();
 
     setHighlightData({
       entries: {
@@ -148,23 +134,39 @@ export function Dashboard() {
           style: 'currency',
           currency: 'BRL',
         }),
-        lastTransaction: '',
-        // lastTransaction: `Última entrada dia ${lastTransactionEntries}`,
+        lastTransaction: lastTransactionEntries
+          ? `Última entrada dia ${lastTransactionEntriesDateString!.slice(
+              0,
+              2
+            )} de ${
+              monthNames[
+                Number(lastTransactionEntriesDateString!.slice(3, 5)) - 1
+              ]
+            }`
+          : 'Nenhuma transação',
       },
       expense: {
         amount: expenseTotal.toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL',
         }),
-        lastTransaction: ''
-        // lastTransaction: `Última saída dia ${lastTransactionExpense}`,
+        lastTransaction: lastTransactionExpenses
+          ? `Última entrada dia ${lastTransactionExpensesDateString!.slice(
+              0,
+              2
+            )} de ${
+              monthNames[
+                Number(lastTransactionExpensesDateString!.slice(3, 5)) - 1
+              ]
+            }`
+          : 'Nenhuma transação',
       },
       total: {
         amount: total.toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL',
         }),
-        lastTransaction: '',
+        lastTransaction: `01 a ${transactionsFormatted.reverse()[0].date.toString().slice(0, 2)} de `,
         // lastTransaction: `${totalInterval} de ${
         //   monthNames[new Date().getMonth()]
         // }`,
@@ -176,6 +178,8 @@ export function Dashboard() {
 
   useEffect(() => {
     loadTransactions();
+    getLastTransactionDate(transactions, 'positive');
+    getLastTransactionDate(transactions, 'negative');
   }, []);
 
   useFocusEffect(
@@ -197,17 +201,17 @@ export function Dashboard() {
               <UserInfo>
                 <Photo
                   source={{
-                    uri: 'https://avatars.githubusercontent.com/u/46676030?v=4',
+                    uri: user.photo,
                   }}
                 />
 
                 <User>
                   <UserGreeting>Olá,</UserGreeting>
-                  <UserName>Fellipe</UserName>
+                  <UserName>{user.name}</UserName>
                 </User>
               </UserInfo>
 
-              <LogoutButton onPress={() => {}}>
+              <LogoutButton onPress={signOut}>
                 <Icon name="power" />
               </LogoutButton>
             </UserWrapper>
@@ -219,33 +223,20 @@ export function Dashboard() {
               title="Entradas"
               amount={highlightData.entries.amount}
               lastTransaction={highlightData.entries.lastTransaction}
-              // lastTransaction={
-              //   transactions.length > 0
-              //     ? highlightData.entries.lastTransaction
-              //     : 'Nenhuma transação'
-              // }
             />
+
             <HighlightCard
               type="negative"
               title="Saídas"
               amount={highlightData.expense.amount}
               lastTransaction={highlightData.expense.lastTransaction}
-              // lastTransaction={
-              //   transactions.length > 0
-              //     ? highlightData.expense.lastTransaction
-              //     : 'Nenhuma transação'
-              // }
             />
+
             <HighlightCard
               type="total"
               title="Total"
               amount={highlightData.total.amount}
               lastTransaction={highlightData.total.lastTransaction}
-              // lastTransaction={
-              //   transactions.length > 0
-              //     ? highlightData.total.lastTransaction
-              //     : 'Nenhuma transação'
-              // }
             />
           </HighlightCards>
 
