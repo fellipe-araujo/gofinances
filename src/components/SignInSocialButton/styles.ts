@@ -5,7 +5,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 export const Button = styled(RectButton)`
   height: ${RFValue(56)}px;
 
-  background-color: ${({ theme }) => theme.colors.shape};
+  background-color: ${({ theme }) => theme.colors.text_light};
   border-radius: 5px;
 
   flex-direction: row;
@@ -21,7 +21,7 @@ export const ImageContainer = styled.View`
   align-items: center;
 
   padding: ${RFValue(16)}px;
-  border-color: ${({ theme }) => theme.colors.background};
+  border-color: ${({ theme }) => theme.colors.text};
   border-right-width: 1px;
 `;
 
