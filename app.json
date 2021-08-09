@@ -9,5 +9,10 @@
     "assetBundlePatterns": [
       "**/*"
     ]
+  },
+  "androidNavigationBar": {
+    "visible": "true",
+    "backgroundColor": "#5636D3",
+    "barStyle": "light-content"
   }
 }

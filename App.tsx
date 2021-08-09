@@ -13,9 +13,7 @@ import AppLoading from 'expo-app-loading';
 import { AuthProvider, useAuth } from './src/hooks/auth';
 import theme from './src/global/styles/theme';
 
-import { AppRoutes } from './src/routes/app.routes';
 import { Routes } from './src/routes';
-import { SignIn } from './src/screens/SignIn';
 
 import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
