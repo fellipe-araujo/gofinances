@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import uuid from 'react-native-uuid';
+import { useTheme } from 'styled-components';
 
 import { InputForm } from '../../components/InputForm';
 import { Button } from '../../components/Forms/Button';
@@ -47,6 +48,8 @@ export function Register() {
   const { user } = useAuth();
 
   const navigation = useNavigation();
+
+  const theme = useTheme();
 
   const {
     control,
@@ -120,6 +123,7 @@ export function Register() {
               name="name"
               control={control}
               placeholder="Nome"
+              placeholderTextColor={theme.colors.text}
               autoCapitalize="sentences"
               autoCorrect={false}
               error={errors.name && errors.name.message}
@@ -129,6 +133,7 @@ export function Register() {
               name="amount"
               control={control}
               placeholder="Preço"
+              placeholderTextColor={theme.colors.text}
               keyboardType="phone-pad"
               error={errors.amount && errors.amount.message}
             />
