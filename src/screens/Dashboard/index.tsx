@@ -111,14 +111,17 @@ export function Dashboard() {
 
     setTransactions(transactionsFormatted.reverse());
 
+    const transactionsReverse = transactionsFormatted.reverse();
+
     let lastTransactionEntries = getLastTransactionDate(
-      transactions,
+      transactionsReverse,
       'positive'
     );
     let lastTransactionExpenses = getLastTransactionDate(
-      transactions,
+      transactionsReverse,
       'negative'
     );
+    let lastTransactionTotal = transactionsReverse[0];
 
     const total = entriesTotal - expenseTotal;
 
@@ -151,7 +154,7 @@ export function Dashboard() {
           currency: 'BRL',
         }),
         lastTransaction: lastTransactionExpenses
-          ? `Última entrada dia ${lastTransactionExpensesDateString!.slice(
+          ? `Última saída dia ${lastTransactionExpensesDateString!.slice(
               0,
               2
             )} de ${
@@ -166,10 +169,14 @@ export function Dashboard() {
           style: 'currency',
           currency: 'BRL',
         }),
-        lastTransaction: `01 a ${transactionsFormatted.reverse()[0].date.toString().slice(0, 2)} de `,
-        // lastTransaction: `${totalInterval} de ${
-        //   monthNames[new Date().getMonth()]
-        // }`,
+        lastTransaction:
+          lastTransactionEntries || lastTransactionExpenses
+            ? `01 a ${lastTransactionTotal.date.toString().slice(0, 2)} de ${
+                monthNames[
+                  Number(lastTransactionTotal.date.toString().slice(3, 5)) - 1
+                ]
+              }`
+            : 'Nenhuma transação',
       },
     });
 
@@ -178,8 +185,6 @@ export function Dashboard() {
 
   useEffect(() => {
     loadTransactions();
-    getLastTransactionDate(transactions, 'positive');
-    getLastTransactionDate(transactions, 'negative');
   }, []);
 
   useFocusEffect(
