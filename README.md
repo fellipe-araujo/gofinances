@@ -47,6 +47,6 @@ expo start
 
 4) Com o aplicativo móvel ExpoGo, leia o QRCode.
 
-## License
+## 🎗️ License
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE.md) para mais detalhes.
