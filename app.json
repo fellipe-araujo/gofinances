@@ -8,11 +8,25 @@
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
-  },
-  "androidNavigationBar": {
-    "visible": "true",
-    "backgroundColor": "#5636D3",
-    "barStyle": "light-content"
+    ],
+    "splash": {
+      "image": "./src/assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#5636D3"
+    },
+    "icon": "./src/assets/icon.png",
+    "android": {
+      "package": "com.codemore.finance",
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "backgroundColor": "#5636D3"
+      }
+    },
+    "androidNavigationBar": {
+      "backgroundColor": "#5636D3",
+      "barStyle": "light-content"
+    },
+    "description": "",
+    "githubUrl": "https://github.com/fellipe-araujo/ignite-react-native-gofinances"
   }
 }
