@@ -47,7 +47,7 @@ export function Register() {
 
   const { user } = useAuth();
 
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
   const theme = useTheme();
 
@@ -103,7 +103,7 @@ export function Register() {
       setTransactionType('');
       setCategory({ key: 'category', name: 'Categoria' });
 
-      navigation.navigate('Listagem');
+      // navigation.navigate('Listagem');
     } catch (error) {
       console.log(error);
       Alert.alert('Não foi possível salvar');
@@ -123,7 +123,6 @@ export function Register() {
               name="name"
               control={control}
               placeholder="Nome"
-              placeholderTextColor={theme.colors.text}
               autoCapitalize="sentences"
               autoCorrect={false}
               error={errors.name && errors.name.message}
@@ -133,7 +132,6 @@ export function Register() {
               name="amount"
               control={control}
               placeholder="Preço"
-              placeholderTextColor={theme.colors.text}
               keyboardType="phone-pad"
               error={errors.amount && errors.amount.message}
             />
@@ -154,6 +152,7 @@ export function Register() {
             </TrasactionTypes>
 
             <CategorySelectButton
+              testID="button-category"
               title={category.name}
               onPress={handleOpenSelectCategoryModal}
             />
@@ -161,7 +160,7 @@ export function Register() {
 
           <Button title="Enviar" onPress={handleSubmit(handleRegister)} />
 
-          <Modal visible={categoryModalOpen}>
+          <Modal testID="modal-category" visible={categoryModalOpen}>
             <CategorySelect
               category={category}
               setCategory={setCategory}
